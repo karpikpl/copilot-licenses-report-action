@@ -1,0 +1,32 @@
+name: 'Check status of copilot seats in an org'
+description:
+  'Check if copilot seats are used in an organization and create a file with the
+  result'
+author: 'Piotr Karpala'
+
+# Add your action's branding here. This will appear on the GitHub Marketplace.
+branding:
+  icon: 'heart'
+  color: 'red'
+
+# Define your inputs here.
+inputs:
+  github-pat:
+    description: 'Application token with permissions to manage_billing:copilot'
+    required: true
+  github-org:
+    description: 'The name of the organization check copilot seats for'
+    required: true
+  max-inactive-days:
+    description: 'The maximum number of days since the last activity'
+    required: true
+    default: 30
+
+# Define your outputs here.
+outputs:
+  file:
+    description: 'name of the file created as output'
+
+runs:
+  using: node20
+  main: dist/index.js
