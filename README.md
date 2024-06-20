@@ -26,7 +26,7 @@ token:
 
 or
 
-- Create and install an GitHub App with appropriate scope.
+- [Create and install an GitHub App with appropriate scope](GitHubApp.md).
 
 ### Using PAT
 
@@ -129,8 +129,8 @@ jobs:
 
 ### `github-pat`
 
-**Required** GitHub personal access token or application token with
-permissions to manage_billing:copilot.
+**Required** GitHub personal access token or application token with permissions
+to manage_billing:copilot.
 
 ### `github-org`
 
