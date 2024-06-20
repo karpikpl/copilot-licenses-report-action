@@ -53,12 +53,18 @@ jobs:
         id: checkout
         uses: actions/checkout@v4
 
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
       - name: Test Local Action
         id: test-action
         uses: ./
         with:
-          github-pat: '${{ secrets.MY_PAT }}'
-          github-org: 'cody-test-org'
+          github-pat: '${{ steps.app-token.outputs.token }}'
+          github-org: 'piotrkarpala0651'
 
       - name: Print Output
         id: output
