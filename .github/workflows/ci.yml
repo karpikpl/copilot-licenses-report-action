@@ -57,7 +57,7 @@ jobs:
         id: test-action
         uses: ./
         with:
-          github-pat: '${{ secrets.GITHUB_PAT }}'
+          github-pat: '${{ secrets.MY_PAT }}'
           github-org: 'cody-test-org'
 
       - name: Print Output
