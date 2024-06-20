@@ -3,6 +3,7 @@
 Setting up GitHub App.
 
 ## Create a new App
+
 Go to Organization -> Settings -> GitHub Apps -> New App
 
 ## Set the scopes
@@ -33,5 +34,5 @@ Note the id.
 
 Create secrets for the workflow:
 
-* `APP_ID` - id of the application
-* `PRIVATE_KEY` - private key generated in the earlier step
+- `APP_ID` - id of the application
+- `PRIVATE_KEY` - private key generated in the earlier step
