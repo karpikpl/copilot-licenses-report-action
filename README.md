@@ -129,12 +129,12 @@ jobs:
 
 ### `github-pat`
 
-**Required** Azure DevOps personal access token or application token with
+**Required** GitHub personal access token or application token with
 permissions to manage_billing:copilot.
 
 ### `github-org`
 
-**Required** Name of the Azure DevOps organization.
+**Required** Name of the GitHub organization.
 
 ### `max-inactive-days`
 
