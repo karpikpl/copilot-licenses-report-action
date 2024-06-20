@@ -58,14 +58,14 @@ jobs:
         with:
           app-id: ${{ secrets.APP_ID }}
           private-key: ${{ secrets.PRIVATE_KEY }}
-          owner: piotrkarpala0651
+          owner: cody-test-org
 
       - name: Test Local Action
         id: test-action
         uses: ./
         with:
           github-pat: '${{ steps.app-token.outputs.token }}'
-          github-org: 'piotrkarpala0651'
+          github-org: cody-test-org
 
       - name: Print Output
         id: output
