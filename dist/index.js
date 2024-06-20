@@ -29225,6 +29225,7 @@ exports.Copilot = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const fs = __importStar(__nccwpck_require__(7147));
+const rateLimits_1 = __nccwpck_require__(2900);
 class Copilot {
     outputFile = 'output.csv';
     octokit;
@@ -29299,6 +29300,8 @@ class Copilot {
             }
             core.info(`Total seats: ${copilot_seats_total_count}`);
             core.info(`Total pages needed: ${pages_needed}`);
+            // wait until rate limit is below the threshold
+            await (0, rateLimits_1.hold_until_rate_limit_success)(pages_needed + 20);
             const copilot_all_users = (await this.octokit.paginate(this.octokit.rest.copilot.listCopilotSeats, {
                 org,
                 per_page: 100
@@ -29390,6 +29393,81 @@ async function run() {
     }
 }
 exports.run = run;
+
+
+/***/ }),
+
+/***/ 2900:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.hold_until_rate_limit_success = exports.callGitHubAPI = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const github = __importStar(__nccwpck_require__(5438));
+async function callGitHubAPI(token, callsNeeded) {
+    try {
+        const octokit = github.getOctokit(token);
+        // ignore eslint warning as we need to call the API in a loop
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+            // make a dummy request to get the rate limit
+            const response = await octokit.request('GET /users/octocat');
+            // parse the rate limit from the response headers
+            const remaining = parseInt(response.headers['x-ratelimit-remaining'], 10);
+            if (remaining < callsNeeded) {
+                core.info('Rate limit approaching, waiting for 60 seconds...');
+                await new Promise(resolve => setTimeout(resolve, 60000));
+            }
+            else {
+                core.info(`💥 Rate limit checked. We have ${remaining} remaining, continuing...`);
+                break;
+            }
+        }
+    }
+    catch (error) {
+        console.error(`Error calling GitHub API: ${error}`);
+    }
+}
+exports.callGitHubAPI = callGitHubAPI;
+/*
+ * This function will call the GitHub API until the rate limit is below the threshold.
+ * It will wait for 60 seconds before checking the rate limit again.
+ */
+async function hold_until_rate_limit_success(callsNeeded) {
+    try {
+        const token = core.getInput('repo-token');
+        await callGitHubAPI(token, callsNeeded);
+    }
+    catch (error) {
+        console.error(`Error calling GitHub API: ${error}`);
+    }
+}
+exports.hold_until_rate_limit_success = hold_until_rate_limit_success;
 
 
 /***/ }),

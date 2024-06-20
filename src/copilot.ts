@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { GitHub } from '@actions/github/lib/utils'
 import * as fs from 'fs'
+import { hold_until_rate_limit_success } from './rateLimits'
 
 type copilotUsers = {
   total_seats?: number | undefined
@@ -146,6 +147,9 @@ export class Copilot {
 
       core.info(`Total seats: ${copilot_seats_total_count}`)
       core.info(`Total pages needed: ${pages_needed}`)
+
+      // wait until rate limit is below the threshold
+      await hold_until_rate_limit_success(pages_needed + 20)
 
       const copilot_all_users = (await this.octokit.paginate(
         this.octokit.rest.copilot.listCopilotSeats,

@@ -1,7 +1,10 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
-export async function callGitHubAPI(token: string): Promise<void> {
+export async function callGitHubAPI(
+  token: string,
+  callsNeeded: number
+): Promise<void> {
   try {
     const octokit = github.getOctokit(token)
 
@@ -17,7 +20,7 @@ export async function callGitHubAPI(token: string): Promise<void> {
         10
       )
 
-      if (remaining < 100) {
+      if (remaining < callsNeeded) {
         core.info('Rate limit approaching, waiting for 60 seconds...')
         await new Promise(resolve => setTimeout(resolve, 60000))
       } else {
@@ -32,10 +35,16 @@ export async function callGitHubAPI(token: string): Promise<void> {
   }
 }
 
-export async function hold_until_rate_limit_success(): Promise<void> {
+/*
+ * This function will call the GitHub API until the rate limit is below the threshold.
+ * It will wait for 60 seconds before checking the rate limit again.
+ */
+export async function hold_until_rate_limit_success(
+  callsNeeded: number
+): Promise<void> {
   try {
     const token: string = core.getInput('repo-token')
-    await callGitHubAPI(token)
+    await callGitHubAPI(token, callsNeeded)
   } catch (error) {
     console.error(`Error calling GitHub API: ${error}`)
   }
