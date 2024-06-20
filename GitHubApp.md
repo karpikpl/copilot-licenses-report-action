@@ -24,15 +24,15 @@ Install the application.
 
 ![install](img/image-org.png)
 
-## Note the application id
+## Note the application ID
 
-Note the id.
+Note the ID.
 
-![id](img/image-id.png)
+![ID](img/image-id.png)
 
 ## Create repository action secrets
 
 Create secrets for the workflow:
 
-- `APP_ID` - id of the application
+- `APP_ID` - ID of the application
 - `PRIVATE_KEY` - private key generated in the earlier step
