@@ -4,9 +4,15 @@ Setting up GitHub App.
 
 ## Create a new App
 
-Go to Organization -> Settings -> GitHub Apps -> New App
+Go to Organization -> Settings -> Developer Settings section -> GitHub Apps -> New GitHub App
 
-## Set the scopes
+Replace <your org> with your organization name in the link:
+`https://github.com/organizations/<your org>/settings/apps`
+
+1. Set a unique name
+1. Provide a home page URL: your company URL or just `http://localhost`
+1. Uncheck Webhook -> Active checkbox.
+1. Set the scopes -> select **Organization permissions** -> **GitHub Copilot Business** -> select **Access: Read-only**
 
 Set all required scopes for the app.
 
